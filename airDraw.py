@@ -17,9 +17,13 @@ while(1) :
     mblur = cv2.GaussianBlur(mask,(15,15),0)
     
     ret,thresh = cv2.threshold(mblur,127,255,0)
-    image, contours, heirarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    if cv2.__version__.startswith('3.'):
+        image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    else:
+        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)    
+    # image, contours, heirarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     img = cv2.drawContours(frame, contours, -1, (0,255,0), 3)
-    if( contours != []):
+    if contours:
         cnt = contours[0]
         M = cv2.moments(cnt)
         if M['m00']!=0:
